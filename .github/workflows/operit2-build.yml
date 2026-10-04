@@ -109,6 +109,15 @@ jobs:
           git config --global http.lowSpeedLimit 0
           git config --global http.lowSpeedTime 999999
           git config --global core.compression 0
+      - name: Install TypeScript and Terser
+        shell: pwsh
+        run: |
+          npm install --prefix .ci-tools/typescript --no-audit --no-fund typescript
+          npm install --prefix .ci-tools/terser --no-audit --no-fund terser
+          .ci-tools\typescript\node_modules\.bin\tsc.cmd --version
+      - name: Generate Dart proxy artifacts
+        shell: pwsh
+        run: cargo check --manifest-path core/crates/proxy/local/Cargo.toml --quiet
       - name: Generate debug signing material (no secrets needed)
         shell: pwsh
         run: |
