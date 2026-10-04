@@ -102,6 +102,13 @@ jobs:
           if (-not (Test-Path -LiteralPath $libclang)) {
             throw "Android bindgen libclang was not prepared at $libclang"
           }
+      - name: Configure git for gitee.com access
+        shell: pwsh
+        run: |
+          git config --global http.postBuffer 524288000
+          git config --global http.lowSpeedLimit 0
+          git config --global http.lowSpeedTime 999999
+          git config --global core.compression 0
       - name: Generate debug signing material (no secrets needed)
         shell: pwsh
         run: |
