@@ -112,7 +112,7 @@ jobs:
       - name: Install TypeScript and Terser
         shell: pwsh
         run: |
-          npm install --prefix .ci-tools/typescript --no-audit --no-fund typescript
+          npm install --prefix .ci-tools/typescript --no-audit --no-fund typescript@5.3.3
           npm install --prefix .ci-tools/terser --no-audit --no-fund terser
           .ci-tools\typescript\node_modules\.bin\tsc.cmd --version
       - name: Generate Dart proxy artifacts
