@@ -114,7 +114,20 @@ jobs:
         run: |
           npm install --prefix .ci-tools/typescript --no-audit --no-fund typescript@5.3.3
           npm install --prefix .ci-tools/terser --no-audit --no-fund terser
+          ".ci-tools\typescript\node_modules\.bin" | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
+          ".ci-tools\terser\node_modules\.bin" | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
           .ci-tools\typescript\node_modules\.bin\tsc.cmd --version
+      - name: Install pnpm and plugin dependencies
+        shell: pwsh
+        run: |
+          corepack enable pnpm
+          Get-ChildItem -Path plugins\packages -Recurse -Filter package.json -Depth 2 | ForEach-Object {
+            $dir = $_.DirectoryName
+            Write-Host "Installing deps in $dir"
+            Push-Location $dir
+            corepack pnpm install --no-frozen-lockfile --ignore-scripts 2>&1 | Out-Null
+            Pop-Location
+          }
       - name: Generate Dart proxy artifacts
         shell: pwsh
         run: cargo check --manifest-path core/crates/proxy/local/Cargo.toml --quiet
